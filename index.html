@@ -455,7 +455,9 @@ if (typeof module !== "undefined") module.exports = Core;
     $enviar.disabled = !consulta.trim();
     $saida.replaceChildren();
     if (!consulta.trim()) { inicio(); return; }
-    const res = Core.buscar(INDICE, consulta, { limite: 8 });
+    let res = Core.buscar(INDICE, consulta, { limite: 8 });
+    if (res.length) res = res.filter(r => r.score >= res[0].score * 0.4);
+    if (window.scrollY > 0) window.scrollTo(0, 0);
     if (!res.length) { $saida.append(el("p", "aviso", sample ? "Nada parecido na base. Envie a pergunta para o Claude responder." : "Nenhuma pergunta da base trata disso.")); return; }
     const s = el("section");
     if (Core.confiavel(res, consulta)) {
